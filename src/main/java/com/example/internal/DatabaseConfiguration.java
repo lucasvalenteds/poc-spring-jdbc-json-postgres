@@ -16,6 +16,8 @@ public class DatabaseConfiguration extends AbstractJdbcConfiguration {
     @Override
     protected List<?> userConverters() {
         return List.of(
+                new VehicleDetailsConverter.Reading(objectMapper),
+                new VehicleDetailsConverter.Writing(objectMapper)
         );
     }
 }

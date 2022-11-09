@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.vehicle.Vehicle;
+import com.example.vehicle.VehicleDetails;
 import com.example.vehicle.VehicleRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,25 +54,55 @@ class ApplicationTest {
 
     @Test
     void creatingBicycle() {
+        final var bicycleDetails = new VehicleDetails.BicycleDetails();
+        bicycleDetails.setSize(29);
+        bicycleDetails.setColor("blue");
+
         final var bicycle = new Vehicle();
         bicycle.setDescription("Regular bicycle");
+        bicycle.setDetails(bicycleDetails);
         vehicleRepository.save(bicycle);
 
         vehicle = vehicleRepository.findById(1L).orElseThrow();
 
         assertThat(vehicle.getId()).isEqualTo(1L);
         assertThat(vehicle.getDescription()).isEqualTo(bicycle.getDescription());
+        assertThat(vehicle.getDetails())
+                .isNotNull()
+                .isInstanceOf(VehicleDetails.class)
+                .isInstanceOf(VehicleDetails.BicycleDetails.class)
+                .isNotInstanceOf(VehicleDetails.CarDetails.class);
+
+        final var details = (VehicleDetails.BicycleDetails) vehicle.getDetails();
+        assertThat(details.getType()).isEqualTo(VehicleDetails.BICYCLE_TYPE);
+        assertThat(details.getSize()).isEqualTo(details.getSize());
+        assertThat(details.getColor()).isEqualTo(details.getColor());
     }
 
     @Test
     void creatingCar() {
+        final var carDetails = new VehicleDetails.CarDetails();
+        carDetails.setVehicleIdentifierNumber("WBAHD5313MBF95736");
+        carDetails.setProductionYear(2012);
+
         final var car = new Vehicle();
         car.setDescription("Electric car");
+        car.setDetails(carDetails);
         vehicleRepository.save(car);
 
         vehicle = vehicleRepository.findById(2L).orElseThrow();
 
         assertThat(vehicle.getId()).isEqualTo(2L);
         assertThat(vehicle.getDescription()).isEqualTo(car.getDescription());
+        assertThat(vehicle.getDetails())
+                .isNotNull()
+                .isInstanceOf(VehicleDetails.class)
+                .isInstanceOf(VehicleDetails.CarDetails.class)
+                .isNotInstanceOf(VehicleDetails.BicycleDetails.class);
+
+        final var details = (VehicleDetails.CarDetails) vehicle.getDetails();
+        assertThat(details.getType()).isEqualTo(VehicleDetails.CAR_TYPE);
+        assertThat(details.getVehicleIdentifierNumber()).isEqualTo(details.getVehicleIdentifierNumber());
+        assertThat(details.getProductionYear()).isEqualTo(details.getProductionYear());
     }
 }

@@ -16,4 +16,7 @@ public final class Vehicle {
 
     @Column("vehicle_description")
     private String description;
+
+    @Column("vehicle_details")
+    private VehicleDetails details;
 }
