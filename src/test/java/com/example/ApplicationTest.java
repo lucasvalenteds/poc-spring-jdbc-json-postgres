@@ -105,4 +105,21 @@ class ApplicationTest {
         assertThat(details.getVehicleIdentifierNumber()).isEqualTo(details.getVehicleIdentifierNumber());
         assertThat(details.getProductionYear()).isEqualTo(details.getProductionYear());
     }
+
+    @Test
+    void findingVehicleByType() {
+        final var bicycles = vehicleRepository.findAllByType(VehicleDetails.BICYCLE_TYPE);
+        assertThat(bicycles)
+                .hasSize(1)
+                .first()
+                .extracting(Vehicle::getDescription).isEqualTo("Regular bicycle");
+
+        final var cars = vehicleRepository.findAllByType(VehicleDetails.CAR_TYPE);
+        assertThat(cars).hasSize(1)
+                .first()
+                .extracting(Vehicle::getDescription).isEqualTo("Electric car");
+
+        final var trucks = vehicleRepository.findAllByType("TRUCK");
+        assertThat(trucks).isEmpty();
+    }
 }
